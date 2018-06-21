@@ -1,0 +1,43 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:title="Pengaturan Umum">
+
+        <ListPreference
+            android:defaultValue="2"
+            android:entries="@array/pref_font_size"
+            android:entryValues="@array/pref_font_size_values"
+            android:key="alphabet_font_size"
+            android:negativeButtonText="@null"
+            android:positiveButtonText="@null"
+            android:title="@string/pref_title_alphabet_font_size" />
+
+        <ListPreference
+            android:defaultValue="2"
+            android:entries="@array/pref_font_size"
+            android:entryValues="@array/pref_font_size_values"
+            android:key="arabic_font_size"
+            android:negativeButtonText="@null"
+            android:positiveButtonText="@null"
+            android:title="@string/pref_title_arabic_font_size" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="Sinkronisasi">
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="enable_sync"
+            android:summary="@string/pref_description_enable_sync"
+            android:title="@string/pref_title_enable_sync"
+            android:enabled="false"/>
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="enable_sync"
+            android:summary="@string/pref_description_enable_reporting"
+            android:title="@string/pref_title_enable_reporting"
+            android:enabled="false"/>
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

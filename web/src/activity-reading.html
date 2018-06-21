@@ -1,0 +1,185 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/iron-list/iron-list.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../bower_components/iron-scroll-threshold/iron-scroll-threshold.html">
+<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../bower_components/iron-icons/editor-icons.html">
+
+<link rel="import" href="view-ayat.html">
+<link rel="import" href="leather-cache.html">
+
+
+<dom-module id="activity-reading">
+  <template>
+
+    <style>
+
+      iron-list {
+        flex: 1 1 auto;
+      }
+
+      .container {
+        height: calc(100vh - 64px);
+        display: flex;
+        flex-direction: column; 
+      }
+
+      .ayat-container {
+        padding: 5px 12vw;
+      }
+
+      @media only screen and (max-width: 768px) {
+          .ayat-container {
+            padding: 5px 5px;
+          }
+      }
+
+    </style>
+
+    <leather-cache id="cache" size="6348" page-size="50"></leather-cache>
+
+    <iron-ajax id="ajax"
+      url="https://us-central1-alquran-um-majid.cloudfunctions.net/stream"
+      handle-as="json"
+      on-response="_didRespond">
+    </iron-ajax>
+
+    <div class="container">
+
+      <!-- <a on-click="_goto">Jump!</a> -->
+
+      <iron-list id="list" items="[]" as="item" on-scroll="_handleScroll">
+        <template>
+          <div class="ayat-container">
+            <view-ayat data="[[item]]"></view-ayat>
+          </div>
+        </template>
+      </iron-list>
+
+    </div>
+
+
+  </template>
+
+  <script>
+    class ActivityReading extends Polymer.Element {
+
+      static get is() { return 'activity-reading'; }
+
+      ready() {
+
+        super.ready();
+
+        this.pageSize = 50;
+        this.requestMap = new Map();
+
+
+        this.items = [];
+        for (var i = 6348; i >= 1; i--) {
+          this.items[i] = {};
+        }
+        
+        this._requestRange(1, 100);
+
+      }
+
+      _generateRequest(index){
+
+        if (!this.requestMap.has(index)) {
+          
+          this.$.ajax.params = {start : index};
+          
+          var promise = this.$.ajax.generateRequest().completes;
+          this.requestMap.set(index, promise);
+          
+          return promise;
+        
+        } else {
+
+          return this.requestMap.get(index);
+
+        }
+
+      }
+
+      _didRespond(e){
+
+        var items = e.detail.response;
+
+        for (var i = 0; i < items.length; i++) {
+          items[i]._id = items[i]._id_ayat;
+        }
+
+        this.$.cache.put(items);
+
+      }
+
+      _goto(e){
+
+        this._requestRange(1000-100, 1000+100, function(){
+          this.$.list.scrollToIndex(1000); 
+        }.bind(this));
+
+      }
+
+      _handleScroll(e){
+
+        if (typeof this.scrollTimer !== undefined) clearTimeout(this.scrollTimer);
+        this.scrollTimer = setTimeout(this._checkScrollRange.bind(this), 50);
+
+      }
+
+      _checkScrollRange(){
+        
+        var firstIndex = (this.$.list.firstVisibleIndex - 100);
+        var lastIndex = (this.$.list.lastVisibleIndex + 100);
+        
+        if (firstIndex < 1) firstIndex = 1;
+        if (lastIndex > 6348) lastIndex = 6348;
+
+        this._requestRange(firstIndex, lastIndex);
+
+      }
+
+      _requestRange(firstIndex, lastIndex, callback) {
+        
+        var requestPageSet = new Set();
+        
+        for (var i = firstIndex; i <= lastIndex; i++) {
+          
+          if (!this.$.cache.isItemAvailable(i)) {
+            var pageIndex = i - i%this.pageSize + 1;
+            requestPageSet.add(pageIndex);
+          }
+
+        }
+
+        var promises = [];
+
+        for (let requestPage of requestPageSet) {
+          promises.push(this._generateRequest(requestPage));
+        }
+
+        Promise.all(promises).then(function(){
+
+          for (var i = firstIndex; i < lastIndex; i++) {
+            this.items[i] = this.$.cache.get(i);
+          }
+
+          this.$.list.items = this.items;
+          this.$.list.fire('resize');
+
+          if (typeof callback === "function") {
+            callback();
+          }
+
+        }.bind(this));
+
+      }
+
+    }
+
+    window.customElements.define(ActivityReading.is, ActivityReading);
+  </script>
+</dom-module>

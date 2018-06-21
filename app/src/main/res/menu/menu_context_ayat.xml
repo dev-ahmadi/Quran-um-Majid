@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:title="@string/menu_salin_ayat"
+        android:id="@+id/copy_ayat" />
+    <item
+        android:title="@string/menu_salin_terjemah"
+        android:id="@+id/copy_terjemah" />
+    <item
+        android:title="@string/menu_letakkan_bookmark"
+        android:id="@+id/letakkan_bookmark" />
+</menu>

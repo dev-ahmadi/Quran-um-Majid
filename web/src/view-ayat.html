@@ -1,0 +1,115 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/iron-list/iron-list.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../bower_components/iron-scroll-threshold/iron-scroll-threshold.html">
+<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../bower_components/iron-icons/editor-icons.html">
+
+
+
+<dom-module id="view-ayat">
+  <template>
+    <style>
+
+      .ayat-card {
+        min-height: 250px;
+        width: 100%;
+      }
+
+      .ayat {
+        font-family: '_PDMS_Saleem_QuranFont';
+        font-size: 40px;
+      }
+
+      .terjemah {
+        color: #424242;
+      }
+
+      .terjemah p{
+        margin-bottom: 10px;
+        margin-top: 5px;
+      }
+
+      .position-info {
+        position: absolute;
+        top: 0;
+        left: 0;
+        padding: 5px 10px;
+        z-index: 100;
+        background-color: #ddd;
+        border-bottom-right-radius: 3px;
+      }
+
+      .suggest-edit {
+        position: absolute;
+        top: 0;
+        right: 0;
+        padding: 5px 10px;
+        z-index: 100;
+        border-bottom-left-radius: 3px;
+        font-size: 10px;
+        color: #fff;
+        
+        cursor:pointer;
+
+        text-decoration: none;
+
+        --iron-icon-height: 16px;
+        --iron-icon-width: 16px;
+      }
+
+      .suggest-edit:hover {
+        color: #000;
+      }
+
+      .edit {
+        width: 100%;
+      }
+
+      .edit-ayat {
+        font-family: '_PDMS_Saleem_QuranFont';
+        font-size: 40px;
+      }
+
+    </style>
+
+    <div style="position: relative;">
+    
+      <div class="position-info">[[data.surat]]:[[data.ayat]]</div>
+      
+      <a class="suggest-edit" on-click="_edit">
+        <iron-icon icon="editor:mode-edit"></iron-icon> report a mistake
+      </a>
+      
+      <paper-card class="ayat-card">
+        <div class="card-content">
+          <p class="ayat" dir="rtl" lang="ar">[[data.teks_ayat]]</p>
+          <div class="terjemah" inner-h-t-m-l="{{data.teks_terjemah}}"></div>
+        </div>
+      </paper-card>
+
+    </div>
+
+  </template>
+
+  <script>
+    class ViewAyat extends Polymer.Element {
+
+      static get is() { return 'view-ayat'; }
+
+      static get properties() {
+        return {
+          data: { type: Object, reflectToAttribute: true },
+        };
+      }
+
+      _edit(){
+        //this.fire();
+      }
+
+    }
+
+    window.customElements.define(ViewAyat.is, ViewAyat);
+  </script>
+</dom-module>

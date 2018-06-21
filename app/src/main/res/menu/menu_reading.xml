@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="me.ibrohim.alquran_um_majid.activities.MainActivity">
+
+
+    <item android:id="@+id/action_goto"
+        android:title="@string/action_goto"
+        android:icon="@drawable/icon_open_in_new"
+        app:showAsAction="always"/>
+
+    <group android:checkableBehavior="all">
+        <item android:id="@+id/opsi_tampilkan_terjemah"
+            android:titleCondensed="Options"
+            android:title="@string/tampilkan_terjemah">
+        </item>
+    </group>
+
+</menu>

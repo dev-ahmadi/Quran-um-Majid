@@ -1,0 +1,94 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+
+<dom-module id="leather-cache">
+<script>
+  class LeatherCache extends Polymer.Element{
+
+    static get is() { return 'leather-cache'; }
+
+    static get properties() {
+      return {
+        size : {type: Number, reflectToAttribute: true},
+        pageSize : {type: Number, reflectToAttribute: true},
+        page : {type: Array},
+      }
+    }
+
+    ready(){
+      super.ready();
+      this.page = {};
+    }
+
+    _pageOffset(index){
+      return index%this.pageSize;
+    }
+
+    _indexToPage(index){
+      return parseInt(index/this.pageSize);
+    }
+
+    _isPageAvailable(pageIndex) {
+      return (typeof this.page[pageIndex]) !== 'undefined';
+    }
+
+
+    _availableOrAllocatePage(pageIndex) {      
+      if (!this._isPageAvailable(pageIndex)) {
+        this.page[pageIndex] = new Array(this.pageSize);
+      }
+    }
+
+    _putItem(item) {
+      var pageIndex = this._indexToPage(item._id);
+      this._availableOrAllocatePage(pageIndex)
+
+      var itemIndex = this._pageOffset(item._id);
+      this.page[pageIndex][itemIndex] = item;
+    }
+
+    isItemAvailable(index) {
+      var pageIndex = this._indexToPage(index);
+      var pageOffset = this._pageOffset(index);
+
+      return (this._isPageAvailable(pageIndex)) && (typeof this.page[pageIndex][pageOffset] !== 'undefined');
+    }
+
+    put(input) {
+
+      if (Array.isArray(input)) {
+        
+        for (var i = input.length - 1; i >= 0; i--) {
+          this._putItem(input[i]);
+        }
+
+      } else {
+        
+        this._putItem(input);
+
+      }
+
+    }
+
+
+    get(index) {
+      
+      if (this.isItemAvailable(index)) {
+      
+        var pageIndex = this._indexToPage(index);
+        var pageOffset = this._pageOffset(index);
+        return this.page[pageIndex][pageOffset];
+      
+      } else {
+
+        return null;
+
+      }
+
+    }
+
+  }
+
+  window.customElements.define(LeatherCache.is, LeatherCache);
+
+</script>
+</dom-module>

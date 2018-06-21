@@ -1,0 +1,65 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:focusable="true"
+    android:longClickable="true"
+    android:clickable="true"
+    android:background="?android:attr/selectableItemBackground"
+    android:paddingLeft="@dimen/reading_ayat_padding_horizontal"
+    android:paddingRight="@dimen/reading_ayat_padding_horizontal"
+    android:id="@+id/container_ayat">
+
+    <ImageView
+        android:id="@+id/khat_surat"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="30dp"/>
+
+    <TextView
+        android:id="@+id/teks_ayat"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/khat_surat"
+        android:layout_marginBottom="@dimen/reading_ayat_space_ayat_terjemah"
+        android:fontFamily="sans-serif"
+        android:gravity="start|center_vertical"
+        android:textColor="@color/arabicTextColor"
+        android:textDirection="rtl"
+        android:textSize="24sp" />
+
+    <LinearLayout
+        android:id="@+id/layout_terjemah"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/teks_ayat"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/nomor_ayat_terjemah"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:paddingRight="3dp"
+            android:text="(1)" />
+
+        <TextView
+            android:id="@+id/teks_terjemah"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/teks_ayat"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="@dimen/reading_ayat_space_ayat_ayat"
+            android:layout_weight="1"
+            android:lineSpacingExtra="@dimen/reading_ayat_space_alfabet_line"
+            android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean laoreet quam id varius accumsan. Integer placerat quis purus eu placerat. Aliquam efficitur faucibus odio ut pellentesque." />
+
+    </LinearLayout>
+
+</RelativeLayout>

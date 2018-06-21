@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="default_arabic_font_size">35</integer>
+    <integer name="default_arabic_search_font_size">20</integer>
+
+    <integer-array name="arabic_font_size">
+        <item>30</item>
+        <item>35</item>
+        <item>40</item>
+        <item>45</item>
+    </integer-array>
+
+    <integer-array name="alphabet_font_size">
+        <item>12</item>
+        <item>14</item>
+        <item>16</item>
+        <item>20</item>
+    </integer-array>
+
+</resources>
+
