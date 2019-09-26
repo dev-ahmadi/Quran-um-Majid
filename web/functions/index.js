@@ -43,7 +43,7 @@ exports.stream = functions.https.onRequest((req, res) => {
 
     }
 
-    var allowedOrigins = ['http://127.0.0.1:8081','https://quran.ibrohim.me'];
+    var allowedOrigins = ['http://127.0.0.1:8081','https://quran.isa.web.id'];
     var origin = req.headers.origin;
     
     if(allowedOrigins.indexOf(origin) > -1){

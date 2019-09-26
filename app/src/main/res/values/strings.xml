@@ -1,6 +1,6 @@
 <resources>
-    <string name="app_name">AlQuran-um-Majid</string>
-    <string name="title_activity_main">Al-Qur\'an-um-Majid</string>
+    <string name="app_name">Quran-um-Majid</string>
+    <string name="title_activity_main">Qur\'ān-um-Majīd</string>
     <string name="title_activity_pencarian">Hasil Pencarian</string>
     <string name="title_activity_reading"></string>
 
@@ -47,7 +47,6 @@
 
     <string name="pref_title_arabic_font_size">Ukuran Teks Arab</string>
     <string name="pref_title_alphabet_font_size">Ukuran Teks Alfabet</string>
-    <string name="format_posisi" formatted="false">%s:%d</string>
     <string name="menu_hapus_bookmark">Hapus Bookmark</string>
 
     <string-array name="pref_font_size">

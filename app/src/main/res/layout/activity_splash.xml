@@ -16,7 +16,7 @@
         android:text="www.alislam.org" />
 
     <ImageView
-        app:srcCompat="@drawable/minara_tul_masih"
+        app:srcCompat="@drawable/minarat_ul_masih"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
         android:id="@+id/imageView"

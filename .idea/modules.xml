@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/AlQuran-um-Majid.iml" filepath="$PROJECT_DIR$/AlQuran-um-Majid.iml" />
+      <module fileurl="file://$PROJECT_DIR$/alquran-um-majid.iml" filepath="$PROJECT_DIR$/alquran-um-majid.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

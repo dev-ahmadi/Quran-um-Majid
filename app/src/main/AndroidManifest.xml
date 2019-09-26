@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="me.ibrohim.alquran_um_majid">
+    package="id.ahmadiyah.quran">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -15,17 +16,17 @@
             android:name="android.app.default_searchable"
             android:value=".ActivityHasilPencarian" />
         <activity
-            android:name=".activities.ActivitySplash"
+            android:name="id.ahmadiyah.quran.activities.ActivitySplash"
             android:label="@string/title_activity_main"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.MainActivity"
+            android:name="id.ahmadiyah.quran.activities.MainActivity"
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
@@ -33,32 +34,32 @@
                 android:value=".ActivityHasilPencarian" />
         </activity>
         <activity
-            android:name=".activities.ActivityReading"
+            android:name="id.ahmadiyah.quran.activities.ActivityReading"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_reading"
             android:launchMode="singleTask"
-            android:parentActivityName=".activities.MainActivity"
+            android:parentActivityName="id.ahmadiyah.quran.activities.MainActivity"
             android:theme="@style/FullscreenTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="me.ibrohim.alquran_um_majid.activities.MainActivity" />
+                android:value="id.ahmadiyah.quran.activities.MainActivity" />
 
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
                 <action android:name="android.intent.action.VIEW" />
                 <data
-                    android:host="quran.ibrohim.me"
+                    android:host="quran.ahmadiyah.id"
                     android:pathPrefix="/tafsir"
                     android:scheme="web+quran" />
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.ActivityHasilPencarian"
+            android:name="id.ahmadiyah.quran.activities.ActivityHasilPencarian"
             android:label="@string/title_activity_pencarian"
             android:launchMode="singleTask">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="me.ibrohim.alquran_um_majid.activities.MainActivity" />
+                android:value="id.ahmadiyah.quran.activities.MainActivity" />
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
@@ -70,9 +71,9 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.ActivityPengaturan"
+            android:name="id.ahmadiyah.quran.activities.ActivityPengaturan"
             android:label="@string/title_activity_pengaturan"
-            android:parentActivityName=".activities.MainActivity"
+            android:parentActivityName="id.ahmadiyah.quran.activities.MainActivity"
             android:theme="@style/AppTheme" />
     </application>
 

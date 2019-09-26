@@ -8,6 +8,35 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:346827981776:android:d87281f9b966b71b756fd5",
+        "android_client_info": {
+          "package_name": "id.ahmadiyah.quran"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "346827981776-odf9t9gg69nadav2hkn7a70odqmvtjmt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBNw4l2JdWfyl9mEzrynhYLK0XOXhiJ2yc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "346827981776-odf9t9gg69nadav2hkn7a70odqmvtjmt.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:346827981776:android:861548fe400faafc",
         "android_client_info": {
           "package_name": "me.ibrohim.alquran_um_majid"
@@ -33,20 +62,13 @@
         }
       ],
       "services": {
-        "analytics_service": {
-          "status": 1
-        },
         "appinvite_service": {
-          "status": 2,
           "other_platform_oauth_client": [
             {
               "client_id": "346827981776-odf9t9gg69nadav2hkn7a70odqmvtjmt.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
-        },
-        "ads_service": {
-          "status": 2
         }
       }
     }

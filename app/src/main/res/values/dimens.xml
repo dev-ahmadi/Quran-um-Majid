@@ -6,6 +6,7 @@
     <dimen name="list_vertical_margin">2dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="appbar_padding_top">8dp</dimen>
+    <dimen name="appbar_padding_bottom">8dp</dimen>
     <dimen name="reading_ayat_padding_horizontal">7dp</dimen>
     <dimen name="reading_ayat_space_ayat_terjemah">10dp</dimen>
     <dimen name="reading_ayat_space_ayat_ayat">20dp</dimen>
