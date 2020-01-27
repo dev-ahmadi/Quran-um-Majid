@@ -75,7 +75,7 @@ class AdapterDaftarAyat(private val mContext: Context, private var mTampilkanTer
         mAlphabetFontSize = alphabetMap[Integer.parseInt(alphabetFontSizeString)]
         mArabicFontSize = arabicMap[Integer.parseInt(arabicFontSizeString)]
 
-        mArabicFont = Typeface.createFromAsset(mContext.assets, "fonts/indopak.ttf")
+        mArabicFont = Typeface.createFromAsset(mContext.assets, "fonts/noorehuda-webfont.otf")
     }
 
     fun setOnClickListener(listener: View.OnClickListener) {
@@ -131,7 +131,7 @@ class AdapterDaftarAyat(private val mContext: Context, private var mTampilkanTer
 
         private fun setClipboard(teks: String) {
             val clipboard = mContext.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-            val clip = ClipData.newPlainText("simple text", teksAyat.text)
+            val clip = ClipData.newPlainText("simple text", teks)
             clipboard.setPrimaryClip(clip)
         }
 
@@ -194,32 +194,6 @@ class AdapterDaftarAyat(private val mContext: Context, private var mTampilkanTer
             background = ContextCompat.getColor(mContext, R.color.backgroundDark)
         }
         holder.containerAyat.setBackgroundColor(background)
-
-        // nomor ayat
-        val formatNomorAyat = "﴿\uFEFF%s\uFEFF﴾"
-        val nomorAyat = Integer.toString(ayat)
-        val _nomorAyatArab = StringBuilder()
-        for (i in 0..nomorAyat.length - 1) {
-            var c = nomorAyat[i].toInt()
-            c = c - 48 + 1776
-            _nomorAyatArab.append(c.toChar())
-        }
-        val nomorAyatOrnamen = String.format(formatNomorAyat, _nomorAyatArab.toString())
-        teks = teks + nomorAyatOrnamen
-
-        //menghilangkan 'lihat juga'
-        val rParagraph = Pattern.compile("<p>(.+?)</p>")
-        val rSpan = Pattern.compile("<span>(.+?)</span>")
-        val matchParagraph = rParagraph.matcher(terjemah)
-        if (matchParagraph.find()) {
-            val temp = matchParagraph.group(1)
-
-            if (temp.length < 21 && matchParagraph.find()) {
-                terjemah = matchParagraph.group(1)
-            } else {
-                terjemah = temp
-            }
-        }
 
         // nomor ayat pada terjemah
         val formatNomorAyatTerjemah = "<b>(%d)</b>"

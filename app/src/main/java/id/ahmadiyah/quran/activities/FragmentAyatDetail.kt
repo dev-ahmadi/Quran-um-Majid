@@ -3,6 +3,7 @@ package id.ahmadiyah.quran.activities
 import android.app.Dialog
 import android.preference.PreferenceManager
 import android.text.Html
+import android.text.method.LinkMovementMethod
 import android.util.Log
 import android.view.View
 import android.widget.TextView
@@ -44,21 +45,21 @@ class FragmentAyatDetail : BottomSheetDialogFragment() {
 
         // Load tafsir content
         val db = DatabaseHelper.getInstance(activity!!.applicationContext).readableDatabase
-
-        Log.d(javaClass.name, mTafsirId)
-
         val row = db.rawQuery("SELECT `teks` FROM tafsir WHERE `_id` = ? AND `_lang_id` = 2", arrayOf(mTafsirId))
-
         var teks = ""
-        if (row.moveToFirst()) {
-            teks = row.getString(row.getColumnIndex("teks"))
-        }
+        if (row.moveToFirst()) { teks = row.getString(row.getColumnIndex("teks")) }
+        row.close()
 
         val judul = String.format("Catatan No.%s", mTafsirId)
         mTeksJudul!!.text = judul
         mTeksDetail!!.text = Html.fromHtml(teks)
+
+        //make text clickable
+        mTeksDetail!!.movementMethod = LinkMovementMethod.getInstance()
+
         mTeksDetail!!.textSize = mAlphabetFontSize.toFloat()
         dialog.setContentView(mContextView!!)
+
     }
 
 }

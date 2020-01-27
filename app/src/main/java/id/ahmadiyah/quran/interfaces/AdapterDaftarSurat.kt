@@ -68,7 +68,7 @@ class AdapterDaftarSurat(internal var mContext: Context, internal var mCursor: C
         val format: String
         when (klasifikasi) {
             1 -> format = mContext.getString(R.string.format_info_makkiyah)
-            2 -> format = mContext.getString(R.string.format_info_makkiyah)
+            2 -> format = mContext.getString(R.string.format_info_madaniyah)
             else -> format = "unknown"
         }
 

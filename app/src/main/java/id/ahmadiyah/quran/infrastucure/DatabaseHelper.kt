@@ -2,13 +2,12 @@ package id.ahmadiyah.quran.infrastucure
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.database.SQLException
-import android.database.sqlite.SQLiteCantOpenDatabaseException
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import android.util.Log
 import java.io.*
 import android.os.Build
+import android.util.Log
+import java.util.*
 
 class DatabaseHelper
 /**
@@ -28,7 +27,12 @@ private constructor(private var context: Context, dbVersion: Int) : SQLiteOpenHe
             Context.MODE_PRIVATE
     )
 
+    private fun alreadyInstalledDatabase(): Boolean {
+        return preferences.getInt(DB_NAME, 0) != 0
+    }
+
     private fun installedDatabaseIsOutdated(): Boolean {
+        Log.d(TAG, "${preferences.getInt(DB_NAME, 0)} ${getVersionCode()}")
         return preferences.getInt(DB_NAME, 0) < getVersionCode()
     }
 
@@ -41,11 +45,56 @@ private constructor(private var context: Context, dbVersion: Int) : SQLiteOpenHe
 
     @Synchronized
     private fun installOrUpdateIfNecessary() {
-        if (installedDatabaseIsOutdated()) {
-            context.deleteDatabase(DB_NAME)
-            installDatabaseFromAssets()
-            writeDatabaseVersionInPreferences()
+        val isInstalled = alreadyInstalledDatabase()
+        val isOutdated = installedDatabaseIsOutdated()
+        when {
+            isInstalled && isOutdated -> {
+                val bookmarks = backupBookmark()
+                installLatestDatabase()
+                restoreBookmark(bookmarks)
+            }
+            isInstalled && !isOutdated -> {
+                // do nothing
+            }
+            !isInstalled -> {
+                installLatestDatabase()
+            }
         }
+    }
+
+    private fun backupBookmark(): List<BookmarkInstance>{
+        val db = super.getReadableDatabase()
+        val cursor = db.rawQuery("SELECT _id, surat, ayat, strftime('%s', terakhir_dibuka) as terakhir_dibuka, frekwensi FROM bookmark", arrayOf())
+        val list = LinkedList<BookmarkInstance>()
+        if (cursor.moveToFirst()) {
+            do {
+                val instance = BookmarkInstance(
+                        id = cursor.getInt(cursor.getColumnIndexOrThrow("_id")),
+                        surat = cursor.getInt(cursor.getColumnIndexOrThrow("surat")),
+                        ayat = cursor.getInt(cursor.getColumnIndexOrThrow("ayat")),
+                        terakhirDibuka = cursor.getLong(cursor.getColumnIndexOrThrow("terakhir_dibuka")),
+                        frekwensi = cursor.getInt(cursor.getColumnIndexOrThrow("frekwensi")))
+                list.add(instance)
+            } while (cursor.moveToNext())
+        }
+        cursor.close()
+        db.close()
+        return list
+    }
+
+    private fun restoreBookmark(list: List<BookmarkInstance>) {
+        val db = super.getWritableDatabase()
+        for (instance in list) {
+            db.execSQL("INSERT OR REPLACE INTO `bookmark`(`_id`, `surat`, `ayat`, `terakhir_dibuka`, `frekwensi`) VALUES (?, ?, ?, datetime(?, 'unixepoch'), ?);",
+                    arrayOf(instance.id, instance.surat, instance.ayat, instance.terakhirDibuka, instance.frekwensi))
+        }
+        db.close()
+    }
+
+    private fun installLatestDatabase() {
+        context.deleteDatabase(DB_NAME)
+        installDatabaseFromAssets()
+        writeDatabaseVersionInPreferences()
     }
 
     override fun getWritableDatabase(): SQLiteDatabase {
@@ -96,6 +145,7 @@ private constructor(private var context: Context, dbVersion: Int) : SQLiteOpenHe
     companion object {
 
         private const val DB_NAME = "quran-db.db"
+        private val TAG = DatabaseHelper::class.simpleName
 
         private var INSTANCE: DatabaseHelper? = null
         fun getInstance(context: Context): DatabaseHelper {
@@ -111,5 +161,12 @@ private constructor(private var context: Context, dbVersion: Int) : SQLiteOpenHe
         }
 
     }
+
+    data class BookmarkInstance(
+            val id: Int,
+            val surat: Int,
+            val ayat: Int,
+            val terakhirDibuka: Long,
+            val frekwensi: Int)
 
 }

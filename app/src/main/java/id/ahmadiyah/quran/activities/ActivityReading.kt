@@ -14,6 +14,7 @@ import android.util.Log
 import android.view.Menu
 import android.view.View
 import android.view.MenuItem
+import android.view.WindowManager
 import androidx.core.app.NavUtils
 
 import id.ahmadiyah.quran.interfaces.AdapterDaftarAyat
@@ -74,8 +75,9 @@ class ActivityReading : AppCompatActivity(), View.OnClickListener, DialogMenujuK
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-
         setContentView(R.layout.activity_reading)
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+
         mVisible = true
         mControlsView = findViewById<View>(R.id.fullscreen_content_controls)
         mContentView = findViewById<View>(R.id.ayat_recycler_view)

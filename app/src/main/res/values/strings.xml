@@ -48,6 +48,7 @@
     <string name="pref_title_arabic_font_size">Ukuran Teks Arab</string>
     <string name="pref_title_alphabet_font_size">Ukuran Teks Alfabet</string>
     <string name="menu_hapus_bookmark">Hapus Bookmark</string>
+    <string name="default_notification_channel_id">fcm_default_channel</string>
 
     <string-array name="pref_font_size">
         <item>Kecil</item>
