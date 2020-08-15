@@ -26,9 +26,9 @@ class DialogMenujuKe : DialogFragment() {
     private var posisi: Posisi? = null
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val builder = AlertDialog.Builder(activity!!)
+        val builder = AlertDialog.Builder(requireActivity())
         // Get the layout inflater
-        val inflater = activity!!.layoutInflater
+        val inflater = requireActivity().layoutInflater
 
         val listSurat = listSurat
         val spinnerArrayAdapter = ArrayAdapter(requireContext(),
@@ -45,9 +45,10 @@ class DialogMenujuKe : DialogFragment() {
                 .setPositiveButton("ok", null)
                 .setNegativeButton("cancel") { dialog, id -> this@DialogMenujuKe.dialog?.cancel() }
 
-        if (posisi != null) {
-            dropdownSurat!!.setSelection(posisi!!.surat - 1)
-            ayatEditText!!.setText(posisi!!.ayat.toString())
+        val currentPosition = posisi
+        if (currentPosition != null) {
+            dropdownSurat!!.setSelection(currentPosition.surat - 1)
+            ayatEditText!!.setText(currentPosition.ayat.toString())
         }
 
         return builder.create()
@@ -61,7 +62,7 @@ class DialogMenujuKe : DialogFragment() {
     }
 
     private fun isValid(surat: Int, ayat: Int): Boolean {
-        return Surat.getJumlahAyat(context!!.applicationContext, surat) >= ayat
+        return Surat.getJumlahAyat(requireContext().applicationContext, surat) >= ayat
     }
 
     private fun performOkButtonAction() {
@@ -79,7 +80,7 @@ class DialogMenujuKe : DialogFragment() {
 
     private val listSurat: Array<String?>
         get() {
-            val listNamaSurat = Surat.getListNamaSurat(context!!.applicationContext)
+            val listNamaSurat = Surat.getListNamaSurat(requireContext().applicationContext)
             val result = arrayOfNulls<String>(listNamaSurat.size)
 
             val format = "%d - %s"
@@ -98,7 +99,7 @@ class DialogMenujuKe : DialogFragment() {
         posisiListener = _listener
     }
 
-    fun setCurrentPosition(posisi: Posisi) {
+    fun setCurrentPosition(posisi: Posisi?) {
         this.posisi = posisi
     }
 }

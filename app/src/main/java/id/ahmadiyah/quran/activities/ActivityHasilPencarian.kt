@@ -73,14 +73,11 @@ class ActivityHasilPencarian : AppCompatActivity(), OnNavigateListener {
 
     }
 
-
     private fun handleIntent(intent: Intent) {
         if (Intent.ACTION_SEARCH == intent.action) {
             showQueryResult(intent.getStringExtra(SearchManager.QUERY))
         }
     }
-
-
 
     public override fun onResume() {
         super.onResume()
@@ -94,7 +91,6 @@ class ActivityHasilPencarian : AppCompatActivity(), OnNavigateListener {
             recyclerView!!.adapter = adapter
         }
     }
-
 
     override fun OnNavigate(posisi: Posisi) {
         val intent = Intent(this, ActivityReading::class.java)

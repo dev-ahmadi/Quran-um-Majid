@@ -48,7 +48,7 @@ class ActivityReading : AppCompatActivity(), View.OnClickListener, DialogMenujuK
         // Note that some of these constants are new as of API 16 (Jelly Bean)
         // and API 19 (KitKat). It is safe to use them, as they are inlined
         // at compile-time and do nothing on earlier devices.
-        mContentView!!.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
+        mContentView?.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
                 View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
                 View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
                 View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or
@@ -64,13 +64,6 @@ class ActivityReading : AppCompatActivity(), View.OnClickListener, DialogMenujuK
     }
     private var mVisible: Boolean = false
     private val mHideRunnable = Runnable { hide() }
-
-    private val mDelayHideTouchListener = View.OnTouchListener { view, motionEvent ->
-        if (AUTO_HIDE) {
-            delayedHide(AUTO_HIDE_DELAY_MILLIS)
-        }
-        false
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -91,17 +84,12 @@ class ActivityReading : AppCompatActivity(), View.OnClickListener, DialogMenujuK
 
         mContentView!!.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_IMMERSIVE
 
-        // Upon interacting with UI controls, delay any scheduled hide()
-        // operations to prevent the jarring behavior of controls going away
-        // while interacting with the UI.
-        //findViewById(R.id.dummy_button).setOnTouchListener(mDelayHideTouchListener);
-
-        mRecyclerView = findViewById<View>(R.id.ayat_recycler_view) as RecyclerView
-        mRecyclerView!!.isNestedScrollingEnabled = true
+        mRecyclerView = findViewById<View>(R.id.ayat_recycler_view) as RecyclerView?
+        mRecyclerView?.isNestedScrollingEnabled = true
 
         // use a linear layout manager
         mLayoutManager = LinearLayoutManager(applicationContext)
-        mRecyclerView!!.layoutManager = mLayoutManager
+        mRecyclerView?.layoutManager = mLayoutManager
 
         mTampilkanTerjemah = mSharedPref!!.getBoolean("tampilkanTerjemah", true)
 
@@ -109,7 +97,7 @@ class ActivityReading : AppCompatActivity(), View.OnClickListener, DialogMenujuK
         adapter.setOnClickListener(this)
 
         mAdapter = adapter
-        mRecyclerView!!.adapter = mAdapter
+        mRecyclerView?.adapter = mAdapter
 
         val intent = intent
         val surat = intent.getIntExtra(INTENT_ARGUMENT_SURAT, 1)
@@ -121,7 +109,7 @@ class ActivityReading : AppCompatActivity(), View.OnClickListener, DialogMenujuK
 
         val namaSurat = Surat.getNamaSurat(applicationContext, surat)
         supportActionBar!!.title = namaSurat
-        ScrollTo(posisi)
+        scrollTo(posisi)
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
@@ -144,10 +132,11 @@ class ActivityReading : AppCompatActivity(), View.OnClickListener, DialogMenujuK
     }
 
     private fun setTitleAsCurrentSurat() {
-        val posisi = posisi
-
-        val namaSurat = Surat.getNamaSurat(applicationContext, posisi.surat)
-        supportActionBar!!.title = namaSurat
+        val currentPosition = posisi
+        if (currentPosition != null) {
+            val namaSurat = Surat.getNamaSurat(applicationContext, currentPosition.surat)
+            supportActionBar!!.title = namaSurat
+        }
     }
 
     private fun hide() {
@@ -179,7 +168,7 @@ class ActivityReading : AppCompatActivity(), View.OnClickListener, DialogMenujuK
         mHideHandler.postDelayed(mHideRunnable, delayMillis.toLong())
     }
 
-    private fun ScrollTo(posisi: Posisi) {
+    private fun scrollTo(posisi: Posisi) {
         val surat = posisi.surat
         val ayat = posisi.ayat
 
@@ -190,12 +179,9 @@ class ActivityReading : AppCompatActivity(), View.OnClickListener, DialogMenujuK
         val posisiAwalSurat = cursorPos.getInt(cursorPos.getColumnIndexOrThrow("position"))
         cursorPos.close()
 
-        val indeks = posisiAwalSurat - 1 + ayat - 1
-
-        val layoutManager = mRecyclerView!!
-                .layoutManager as LinearLayoutManager
-        layoutManager.scrollToPositionWithOffset(indeks, 0)
-
+        val index = posisiAwalSurat - 1 + ayat - 1
+        val layoutManager = mRecyclerView?.layoutManager as LinearLayoutManager?
+        layoutManager?.scrollToPositionWithOffset(index, 0)
     }
 
     public override fun onPause() {
@@ -207,15 +193,21 @@ class ActivityReading : AppCompatActivity(), View.OnClickListener, DialogMenujuK
         bookmark.save()
     }
 
-    private val posisi: Posisi
+    private val posisi: Posisi?
         get() {
-            val layoutManager = mRecyclerView!!.layoutManager as LinearLayoutManager
-            val index = layoutManager.findFirstVisibleItemPosition()
+            val recyclerView = this.mRecyclerView
 
-            val viewHolder = mRecyclerView!!
-                    .findViewHolderForAdapterPosition(index) as AdapterDaftarAyat.ViewHolder
+            if (recyclerView != null) {
+                val layoutManager = recyclerView.layoutManager as LinearLayoutManager?
+                val index = layoutManager?.findFirstVisibleItemPosition()
 
-            return viewHolder.posisi!!
+                if (index != null) {
+                    val viewHolder = recyclerView.findViewHolderForAdapterPosition(index) as AdapterDaftarAyat.ViewHolder?
+                    return viewHolder?.posisi
+                }
+            }
+
+            return null
         }
 
     override fun onClick(view: View) {
@@ -301,7 +293,7 @@ class ActivityReading : AppCompatActivity(), View.OnClickListener, DialogMenujuK
         Log.d(javaClass.name, posisi.ayat.toString())
 
         hide()
-        ScrollTo(posisi)
+        scrollTo(posisi)
     }
 
     companion object {
@@ -309,7 +301,6 @@ class ActivityReading : AppCompatActivity(), View.OnClickListener, DialogMenujuK
         const val INTENT_ARGUMENT_AYAT = "ayat"
         const val INTENT_ARGUMENT_SESSION = "session"
 
-        private const val AUTO_HIDE = true
         private const val AUTO_HIDE_DELAY_MILLIS = 3000
 
         private const val UI_ANIMATION_DELAY = 300

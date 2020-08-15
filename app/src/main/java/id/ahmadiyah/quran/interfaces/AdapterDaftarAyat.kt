@@ -8,6 +8,7 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Typeface
 import android.graphics.drawable.Drawable
+import android.os.Build
 import android.preference.PreferenceManager
 import androidx.core.content.ContextCompat
 import androidx.appcompat.app.AppCompatDelegate
@@ -187,28 +188,26 @@ class AdapterDaftarAyat(private val mContext: Context, private var mTampilkanTer
         val ayat = mCursorAyat.getInt(mCursorAyat.getColumnIndexOrThrow("ayat"))
         var terjemah = mCursorTerjemah.getString(mCursorAyat.getColumnIndexOrThrow("teks"))
 
-        val background: Int
-        if (id % 2 == 0) {
-            background = ContextCompat.getColor(mContext, R.color.backgroundLight)
-        } else {
-            background = ContextCompat.getColor(mContext, R.color.backgroundDark)
-        }
+        val background: Int = ContextCompat.getColor(mContext, when (id % 2) {
+            0 -> R.color.backgroundLight
+            else -> R.color.backgroundDark
+        })
         holder.containerAyat.setBackgroundColor(background)
 
         // nomor ayat pada terjemah
-        val formatNomorAyatTerjemah = "<b>(%d)</b>"
-        holder.teksNomorAyatTerjemah.text = Html.fromHtml(String.format(formatNomorAyatTerjemah, ayat))
         holder.teksNomorAyatTerjemah.textSize = mAlphabetFontSize.toFloat()
+        holder.teksNomorAyatTerjemah.text = when {
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.N ->
+                Html.fromHtml(String.format("<b>(%d)</b>", ayat), Html.FROM_HTML_MODE_LEGACY)
+            else ->
+                Html.fromHtml(String.format("<b>(%d)</b>", ayat))
+        }
 
-        //percobaan:click
         holder.teksTerjemah.movementMethod = LinkMovementMethod.getInstance()
-        //terjemah = linkTafsir(terjemah);
-        //Log.d(getClass().getName(), terjemah);
 
-        if (mTampilkanTerjemah) {
-            holder.containerTerjemah.visibility = View.VISIBLE
-        } else {
-            holder.containerTerjemah.visibility = View.GONE
+        holder.containerTerjemah.visibility = when (mTampilkanTerjemah) {
+            true -> View.VISIBLE
+            false -> View.GONE
         }
 
         holder.posisi = Posisi(surat, ayat)
@@ -230,29 +229,10 @@ class AdapterDaftarAyat(private val mContext: Context, private var mTampilkanTer
         return mAyatPertama.contains(position + 1)
     }
 
-    @Deprecated("")
-    private fun linkTafsir(terjemah: String): String {
-        val terjemahDenganLink = StringBuilder(terjemah)
-        val rLink = Pattern.compile("<a>([0-9]+[a-z]?)</a>")
-        val matchLink = rLink.matcher(terjemah)
-
-        val packageName = mContext.packageName
-        var offset = 0
-        while (matchLink.find()) {
-            val replace = "<a href=\"content://" + packageName + "/tafsir?id=" + matchLink.group(1) + "\">" + matchLink.group(1) + "</a>"
-            val start = matchLink.start(0)
-            val end = matchLink.end(0)
-            terjemahDenganLink.replace(start + offset, end + offset, replace)
-            offset = offset + replace.length - (end - start)
-        }
-        return terjemahDenganLink.toString()
-    }
-
     override fun getItemViewType(position: Int): Int {
-        if (isFirstAyat(position)) {
-            return 1
-        } else {
-            return 2
+        return when (isFirstAyat(position)) {
+            true -> 1
+            false -> 2
         }
     }
 
@@ -277,18 +257,20 @@ class AdapterDaftarAyat(private val mContext: Context, private var mTampilkanTer
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val v: View
 
-        if (viewType == 1) {
+        return if (viewType == 1) {
             v = LayoutInflater.from(parent.context)
                     .inflate(R.layout.list_ayat_pertama, parent, false)
             v.setOnClickListener(mListener)
             v.findViewById<View>(R.id.layout_terjemah).setOnClickListener(mListener)
-            return AdapterDaftarAyat.ViewHolderAyatPertama(v, mContext)
+
+            ViewHolderAyatPertama(v, mContext)
         } else {
             v = LayoutInflater.from(parent.context)
                     .inflate(R.layout.list_ayat, parent, false)
             v.setOnClickListener(mListener)
             v.findViewById<View>(R.id.layout_terjemah).setOnClickListener(mListener)
-            return ViewHolder(v, mContext)
+
+            ViewHolder(v, mContext)
         }
 
     }

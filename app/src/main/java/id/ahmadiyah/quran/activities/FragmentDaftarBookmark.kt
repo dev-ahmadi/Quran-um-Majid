@@ -8,10 +8,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-
-import id.ahmadiyah.quran.interfaces.AdapterDaftarBookmark
 import id.ahmadiyah.quran.R
-import id.ahmadiyah.quran.models.Bookmark
+import id.ahmadiyah.quran.interfaces.AdapterDaftarBookmark
 import id.ahmadiyah.quran.models.Bookmark.BookmarkType
 
 class FragmentDaftarBookmark : Fragment(), AdapterDaftarBookmark.BookmarkClickListener {
@@ -32,11 +30,14 @@ class FragmentDaftarBookmark : Fragment(), AdapterDaftarBookmark.BookmarkClickLi
         return rootView
     }
 
+    override fun onPause() {
+        super.onPause()
+        recyclerView!!.adapter = null
+    }
+
     override fun onResume() {
         super.onResume()
-
-        recyclerView!!.adapter = null
-        adapter = AdapterDaftarBookmark(context!!.applicationContext)
+        adapter = AdapterDaftarBookmark(requireContext().applicationContext)
         adapter!!.setOnClickListener(this)
         recyclerView!!.adapter = adapter
     }

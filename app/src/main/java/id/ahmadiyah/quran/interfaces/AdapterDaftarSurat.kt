@@ -6,6 +6,7 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.drawable.Drawable
 import android.os.AsyncTask
+import android.os.Build
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.recyclerview.widget.RecyclerView
@@ -36,19 +37,10 @@ class AdapterDaftarSurat(internal var mContext: Context, internal var mCursor: C
     }
 
     class ViewHolder(v: View) : RecyclerView.ViewHolder(v) {
-
-        var mNamaSurat: TextView
-        var mNomorSurat: TextView
-        var mInfoSurat: TextView
-        var mImageView: ImageView
-
-        init {
-            mImageView = v.findViewById<View>(R.id.khat_surat) as ImageView
-            mNamaSurat = v.findViewById<View>(R.id.nama_surat) as TextView
-            mNomorSurat = v.findViewById<View>(R.id.nomor_surat) as TextView
-            mInfoSurat = v.findViewById<View>(R.id.info_surat) as TextView
-        }
-
+        var mNamaSurat: TextView = v.findViewById<View>(R.id.nama_surat) as TextView
+        var mNomorSurat: TextView = v.findViewById<View>(R.id.nomor_surat) as TextView
+        var mInfoSurat: TextView = v.findViewById<View>(R.id.info_surat) as TextView
+        var mImageView: ImageView = v.findViewById<View>(R.id.khat_surat) as ImageView
     }
 
     override fun getItemCount(): Int {
@@ -60,20 +52,25 @@ class AdapterDaftarSurat(internal var mContext: Context, internal var mCursor: C
 
         val nama = mCursor.getString(mCursor.getColumnIndexOrThrow("nama"))
         val formatSurat = mContext.getString(R.string.format_surat)
-        holder.mNamaSurat.text = Html.fromHtml(String.format(formatSurat, nama))
+
+        holder.mNamaSurat.text = when {
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.N ->
+                Html.fromHtml(String.format(formatSurat, nama), Html.FROM_HTML_MODE_LEGACY)
+            else ->
+                Html.fromHtml(String.format(formatSurat, nama))
+        }
 
         val klasifikasi = mCursor.getInt(mCursor.getColumnIndexOrThrow("klasifikasi"))
         val jumlahAyat = mCursor.getInt(mCursor.getColumnIndexOrThrow("jumlah_ayat"))
 
-        val format: String
-        when (klasifikasi) {
-            1 -> format = mContext.getString(R.string.format_info_makkiyah)
-            2 -> format = mContext.getString(R.string.format_info_madaniyah)
-            else -> format = "unknown"
+        val format: String = when (klasifikasi) {
+            1 -> mContext.getString(R.string.format_info_makkiyah)
+            2 -> mContext.getString(R.string.format_info_madaniyah)
+            else -> "unknown"
         }
 
         val info = String.format(format, jumlahAyat)
-        holder.mNomorSurat.text = Integer.toString(position + 1)
+        holder.mNomorSurat.text = (position + 1).toString()
         holder.mInfoSurat.text = info
 
         holder.mImageView.setImageBitmap(mCache[position])

@@ -10,7 +10,6 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import id.ahmadiyah.quran.infrastucure.DatabaseHelper
-import id.ahmadiyah.quran.models.Surat
 
 
 class ActivitySplash : AppCompatActivity() {

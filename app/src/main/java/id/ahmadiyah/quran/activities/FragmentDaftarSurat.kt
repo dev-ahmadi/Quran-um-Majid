@@ -31,10 +31,10 @@ class FragmentDaftarSurat : Fragment(), View.OnClickListener {
         mLayoutManager = LinearLayoutManager(this.context)
         mRecyclerView!!.layoutManager = mLayoutManager
 
-        val DbHelper = DatabaseHelper.getInstance(context!!.applicationContext).readableDatabase
+        val DbHelper = DatabaseHelper.getInstance(requireContext().applicationContext).readableDatabase
         val cursor = DbHelper.rawQuery("SELECT * FROM surat", null)
 
-        val adapter = AdapterDaftarSurat(context!!, cursor)
+        val adapter = AdapterDaftarSurat(requireContext().applicationContext, cursor)
         adapter.setOnClickListener(this)
 
         mAdapter = adapter
